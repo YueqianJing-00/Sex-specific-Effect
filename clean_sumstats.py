@@ -5,9 +5,9 @@ from scipy.stats import norm
 
 trait = sys.argv[1]
 
-path = '/gpfs/ysm/scratch60/zhao/jjh89/Sex_Differences/Primary_Summary_Statistics/'
+path = './Primary_Summary_Statistics/'
 
-variant_dict = pickle.load(open('/gpfs/ysm/scratch60/zhao/jjh89/Sex_Differences/ukbb_files/variants.pkl', 'rb'))
+variant_dict = pickle.load(open('./ukbb_files/variants.pkl', 'rb'))
 
 all_df = pd.read_csv('{0}{1}/{1}.gwas.imputed_v3.both_sexes.tsv.bgz'.format(path, trait), sep = '\t', compression = 'gzip')
 male_df = pd.read_csv('{0}{1}/{1}.gwas.imputed_v3.male.tsv.bgz'.format(path, trait), sep = '\t', compression = 'gzip')
