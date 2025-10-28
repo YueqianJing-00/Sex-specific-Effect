@@ -7,7 +7,7 @@ trait = sys.argv[1]
 
 path = './Primary_Summary_Statistics/'
 
-variant_dict = pickle.load(open('./ukbb_files/variants.pkl', 'rb'))
+variant_dict = pickle.load(open('./variants.pkl', 'rb'))
 
 all_df = pd.read_csv('{0}{1}/{1}.gwas.imputed_v3.both_sexes.tsv.bgz'.format(path, trait), sep = '\t', compression = 'gzip')
 male_df = pd.read_csv('{0}{1}/{1}.gwas.imputed_v3.male.tsv.bgz'.format(path, trait), sep = '\t', compression = 'gzip')
