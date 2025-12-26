@@ -27,7 +27,7 @@ Run:
 python clean_sumstat.py Z87
 ```
 
-This gives you the cleaned summary statistics with column SNP, P (P value), N (sample sizes), A1 (minor allele), A2 (reference allele), etc.
+This gives you the cleaned summary statistics with column SNP, beta, se, tstat, P, A1 (minor allele), A2 (reference allele), etc.
 
 ```text
 Primary_Summary_Statistics/Z87/
