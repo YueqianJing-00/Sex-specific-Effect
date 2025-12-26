@@ -26,3 +26,13 @@ Run:
 ```bash
 python clean_sumstat.py Z87
 ```
+
+This gives you the cleaned summary statistics with column SNP, P (P value), N (sample sizes), A1 (minor allele), A2 (reference allele), etc.
+
+```text
+Primary_Summary_Statistics/Z87/
+  ├── Z87.sumstats.both_sexes.tsv
+  ├── Z87.sumstats.male.tsv
+  └── Z87.sumstats.female.tsv
+```
+
