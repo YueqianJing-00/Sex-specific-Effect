@@ -54,10 +54,27 @@ Using this matrix, the 733 traits are clustered into 270 trait groups. The resul
 
 For each trait group, we construct group-level summary statistics by taking, for each variant, the minimum P-value across all traits in that group. The resulting trait-group summary statistics are saved under `traitgroups/`.
 
+### Toy example: group-level P-value by taking the minimum across traits
+
+Assume trait group `1` contains two traits (`T1`, `T2`):
+
+| SNP  | P (T1)  | P (T2)  | 
+|------|---------|---------|
+| rs1  | 1e-6    | 2e-4    | 
+| rs2  | 0.03    | 5e-8    | 
+| rs3  | NA      | 0.10    | 
+
+The resulting group-level summary stats would be:
+
+| SNP  | P_group |
+|------|---------|
+| rs1  | 1e-6    |
+| rs2  | 5e-8    |
+| rs3  | 0.10    |
 
 ## 4）Clumping loci within a trait group (PLINK 1.9)
 
-Assuming `Z87` belongs to trait group `1`, we perform LD clumping on the trait-group summary statistics using PLINK 1.9:
+Assuming `Z87` belongs to trait group `1`, we perform LD clumping on the trait-group summary statistics using PLINK 1.9 with 1000G EUR samples as reference panel:
 
 ```bash
 plink --bfile 1000G \
@@ -74,10 +91,9 @@ plink --bfile 1000G \
 
 This step uses the PLINK clumping results to group SNPs into loci, then outputs locus-annotated tables for each trait in the selected trait group.
 
-Run (replace `<TRAITGROUP_NUM>` with an integer, e.g. `1`):
 
 ```bash
-python primary_traitgroup_sse.py Z87
+python primary_traitgroup_sse.py 1
 ```
 
 **Outputs (per trait, saved under `Primary_Summary_Statistics/<TRAIT>/`)**
