@@ -46,10 +46,14 @@ python ldsc.py \
   --rg Z87.ldsc.both_sexes.sumstats.gz,../Z85/Z85.ldsc.both_sexes.sumstats.gz \
   --out ../../Genetic_Correlations/Z87-Z85
 ```
+The 733 × 733 genetic correlation matrix is stored in `files/genecorr.pkl`.
 
-Based on the resulting genetic correlation matrix, the 733 traits are grouped into 270 trait groups (saved under `traitgroups/`).
+Using this matrix, the 733 traits are clustered into 270 trait groups. The resulting group assignments are saved as:
+- `files/traitgroups.pkl` (list of trait groups)
+- `files/traitgroup_dict.pkl` (mapping from trait → group index)
 
-For each trait group, we construct group-level summary statistics by taking, for each variant, the minimum P-value across all traits within the group.
+For each trait group, we construct group-level summary statistics by taking, for each variant, the minimum P-value across all traits in that group. The resulting trait-group summary statistics are saved under `traitgroups/`.
+
 
 ## 4）Clumping loci within a trait group (PLINK 1.9)
 
