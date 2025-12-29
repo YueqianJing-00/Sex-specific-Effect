@@ -19,14 +19,14 @@ def classify_effect_direction(group):
 
 traitgroup_num = int(sys.argv[1])
 
-traits = pd.read_csv('/gpfs/gibbs/pi/zhao/yj348/sse/traits.txt')['Trait'].to_list()
-traitgroup_dict = pickle.load(open('/gpfs/gibbs/pi/zhao/yj348/sse/traitgroup_dict.pkl', 'rb'))
-traitgroups = pickle.load(open('/gpfs/gibbs/pi/zhao/yj348/sse/traitgroups.pkl', 'rb'))
+traits = pd.read_csv('../files/traits.txt')['Trait'].to_list()
+traitgroup_dict = pickle.load(open('../files/traitgroup_dict.pkl', 'rb'))
+traitgroups = pickle.load(open('../files/traitgroups.pkl', 'rb'))
 path = '/gpfs/gibbs/pi/zhao/yj348/sse/'
-variant_dict = pickle.load(open('/gpfs/gibbs/pi/zhao/yj348/sse/variants.pkl', 'rb'))
+variant_dict = pickle.load(open('../files/variants.pkl', 'rb'))
 
 
-df = pd.read_csv('/gpfs/gibbs/pi/zhao/yj348/sse/phen/Trait_Groups/{0}/{0}.clumped'.format(traitgroup_num), delim_whitespace=True,engine='python')
+df = pd.read_csv('../Trait_Groups/{0}/{0}.clumped'.format(traitgroup_num), delim_whitespace=True,engine='python')
 df['SNPs'] = df['SP2'].apply(lambda x: [y[:-3] for y in x.split(',')] if x != 'NONE' else np.nan)
 
 clump_dict = df.set_index('SNP').to_dict()['SNPs']
