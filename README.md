@@ -24,7 +24,7 @@ Primary_Summary_Statistics/Z87/
 Run:
 
 ```bash
-python clean_sumstat.py Z87
+python ./Scripts/clean_sumstat.py Z87
 ```
 
 This gives you the cleaned summary statistics with column SNP, beta, se, tstat, P, A1 (minor allele), A2 (reference allele), etc.
@@ -93,7 +93,7 @@ This step uses the PLINK clumping results to group SNPs into loci, then outputs 
 
 
 ```bash
-python primary_traitgroup_sse.py 1
+python ./Scripts/primary_traitgroup_sse.py 1
 ```
 
 **Outputs (per trait, saved under `Primary_Summary_Statistics/<TRAIT>/`)**
