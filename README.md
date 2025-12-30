@@ -88,17 +88,20 @@ plink --bfile 1000G \
 ```
 
 
-## 5) Group SNPs by clumped loci and extract sex-specific signals
+## 5) Group SNPs by clumped loci and extract sex-specific loci
 
 This step uses the PLINK clumping results to group SNPs into loci, then outputs locus-annotated tables for each trait in the selected trait group.
 
 
 ```bash
 python ./Scripts/primary_classify_snps.py 1
+python ./Scripts/find_sse_locus.py 1
 ```
 
 ***Outputs (per trait, saved under `Primary_Summary_Statistics/<TRAIT>/`)***
 - `<TRAIT>.clumped_all.tsv`: all SNPs grouped by locus
 - `<TRAIT>.clumped_SSE.tsv`: sex-specific SNPs (genome-wide significant in one sex only); includes `p_diff_adj` (BH-FDR) when available
+- `<TRAIT>.clumped_SSE_representative.tsv`: sex-specific loci
+
 
 
