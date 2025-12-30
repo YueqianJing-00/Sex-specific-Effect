@@ -41,4 +41,4 @@ for i in range(len(traitgroups[traitgroup_num - 1])):
         Direction = ED_candidate.groupby('locus').apply(classify_effect_direction)
         ED_summary = ED_candidate.loc[ED_candidate.groupby('locus')['p_min'].idxmin()]
         ED_summary['Direction'] = Direction.values
-        ED_summary.to_csv('/gpfs/gibbs/pi/zhao/yj348/sse/Primary_Summary_Statistics/{0}/{0}.clumped_ED_summary.tsv'.format(trait), sep = '\t', index = False)
+        ED_summary.to_csv('../Primary_Summary_Statistics/{0}/{0}.clumped_ED_summary.tsv'.format(trait), sep = '\t', index = False)
