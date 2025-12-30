@@ -1,3 +1,14 @@
+"""
+clump_group_and_extract_sse.py
+
+Goal:
+1) Read a PLINK .clumped file for one trait group and build SNP to locus mapping.
+3) Export:
+   - <TRAIT>.clumped_all.tsv  (all clumped SNPs with locus labels, ordered by the p-value within same locus)
+   - <TRAIT>.clumped_SSE.tsv  (sex-specific significant SNPs + FDR on p_diff)
+"""
+
+
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -22,22 +33,16 @@ traitgroup_num = int(sys.argv[1])
 traits = pd.read_csv('../files/traits.txt')['Trait'].to_list()
 traitgroup_dict = pickle.load(open('../files/traitgroup_dict.pkl', 'rb'))
 traitgroups = pickle.load(open('../files/traitgroups.pkl', 'rb'))
-path = '/gpfs/gibbs/pi/zhao/yj348/sse/'
 variant_dict = pickle.load(open('../files/variants.pkl', 'rb'))
-
 
 df = pd.read_csv('../Trait_Groups/{0}/{0}.clumped'.format(traitgroup_num), delim_whitespace=True,engine='python')
 df['SNPs'] = df['SP2'].apply(lambda x: [y[:-3] for y in x.split(',')] if x != 'NONE' else np.nan)
 
 clump_dict = df.set_index('SNP').to_dict()['SNPs']
 clump_dict = {k: ([k] if type(v) == float else v + [k]) for k,v in clump_dict.items()}
-#trait_clump_df_CED = pd.DataFrame(columns = ['trait', 'locus', 'SNP', 'P_male', 'beta_male', 'se_male', 'P_female', 'beta_female', 'se_female', 'p_diff'])
-#trait_clump_df_OED = pd.DataFrame(columns = ['trait', 'locus', 'SNP', 'P_male', 'beta_male', 'se_male', 'P_female', 'beta_female', 'se_female', 'p_diff'])
-#trait_clump_df_AED = pd.DataFrame(columns = ['trait', 'locus', 'SNP', 'P_male', 'beta_male', 'se_male', 'P_female', 'beta_female', 'se_female', 'p_diff'])
-
 
 for i in range(len(traitgroups[traitgroup_num - 1])):
-    trait_df = pd.read_csv('/gpfs/gibbs/pi/zhao/yj348/sse/Primary_Summary_Statistics/{0}/{0}.sumstats.tsv'.format(traitgroups[traitgroup_num-1][i]), sep = '\t')
+    trait_df = pd.read_csv('../Primary_Summary_Statistics/{0}/{0}.sumstats.tsv'.format(traitgroups[traitgroup_num-1][i]), sep = '\t')
     trait_clump_df_SSE = pd.DataFrame(columns = ['trait', 'locus', 'SNP', 'P_male', 'beta_male', 'se_male', 'P_female', 'beta_female', 'se_female', 'z_diff', 'p_diff', 'p_min'])
     trait_clump_df_no_SSE = pd.DataFrame(columns = ['trait', 'locus', 'SNP', 'P_male', 'beta_male', 'se_male', 'P_female', 'beta_female', 'se_female', 'z_diff', 'p_diff', 'p_min'])
     trait_clump_df = pd.DataFrame(columns = ['locus', 'SNP', 'P_male', 'beta_male', 'se_male', 'P_female', 'beta_female', 'se_female', 'z_diff', 'p_diff', 'p_min'])
@@ -56,8 +61,8 @@ for i in range(len(traitgroups[traitgroup_num - 1])):
     print(traitgroups[traitgroup_num-1][i])
 
     #### Trait_clump_df_SSE contains all Sex-specific SNP grouped by locus
-    trait_clump_df_SSE.to_csv('/gpfs/gibbs/pi/zhao/yj348/sse/Primary_Summary_Statistics/{0}/{0}.clumped_SSE.tsv'.format(traitgroups[traitgroup_num-1][i]), sep = '\t', index = False)
+    trait_clump_df_SSE.to_csv('../Primary_Summary_Statistics/{0}/{0}.clumped_SSE.tsv'.format(traitgroups[traitgroup_num-1][i]), sep = '\t', index = False)
     #### Trait_clump_df_no_SSE contains all SNPs grouped by locus
-    trait_clump_df_no_SSE.to_csv('/gpfs/gibbs/pi/zhao/yj348/sse/Primary_Summary_Statistics/{0}/{0}.clumped_all.tsv'.format(traitgroups[traitgroup_num-1][i]), sep = '\t', index = False)
+    trait_clump_df_no_SSE.to_csv('../Primary_Summary_Statistics/{0}/{0}.clumped_all.tsv'.format(traitgroups[traitgroup_num-1][i]), sep = '\t', index = False)
 
 print("Finish")
