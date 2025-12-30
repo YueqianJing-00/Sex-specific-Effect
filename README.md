@@ -26,6 +26,7 @@ Run:
 ```bash
 python ./Scripts/clean_sumstat.py Z87
 ```
+The file variants.pkl can be find in the google drive.
 
 This gives you the cleaned summary statistics with column SNP, beta, se, tstat, P, A1 (minor allele), A2 (reference allele), etc.
 
