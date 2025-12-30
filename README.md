@@ -94,12 +94,11 @@ This step uses the PLINK clumping results to group SNPs into loci, then outputs 
 
 
 ```bash
-python ./Scripts/primary_traitgroup_sse.py 1
+python ./Scripts/primary_classify_snps.py 1
 ```
 
-**Outputs (per trait, saved under `Primary_Summary_Statistics/<TRAIT>/`)**
+***Outputs (per trait, saved under `Primary_Summary_Statistics/<TRAIT>/`)***
 - `<TRAIT>.clumped_all.tsv`: all SNPs grouped by locus
 - `<TRAIT>.clumped_SSE.tsv`: sex-specific SNPs (genome-wide significant in one sex only); includes `p_diff_adj` (BH-FDR) when available
 
-> Note: the script currently uses hard-coded absolute paths (e.g., `/gpfs/...`). Update those paths to match your environment before running.
 
