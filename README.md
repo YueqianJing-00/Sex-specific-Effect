@@ -98,10 +98,46 @@ python ./Scripts/primary_classify_snps.py 1
 python ./Scripts/find_sse_locus.py 1
 ```
 
-***Outputs (per trait, saved under `Primary_Summary_Statistics/<TRAIT>/`)***
-- `<TRAIT>.clumped_all.tsv`: all SNPs grouped by locus
-- `<TRAIT>.clumped_SSE.tsv`: sex-specific SNPs (genome-wide significant in one sex only); includes `p_diff_adj` (BH-FDR) when available
-- `<TRAIT>.clumped_SSE_representative.tsv`: sex-specific loci
+***Outputs (per trait, saved under `Primary_Summary_Statistics/Z87/`)***
+- `Z87.clumped_all.tsv`: all SNPs grouped by locus
+- `Z87.clumped_SSE.tsv`: sex-specific SNPs (genome-wide significant in one sex only); includes `p_diff_adj` (BH-FDR) when available
+- `Z87.clumped_SSE_representative.tsv`: reported sex-specific loci
+
+## 6) Replication GWAS
+
+To perform the replication analysis, construct the replication cohort as described in the **Methods**. Extract genotypes, phenotypes, and covariates from UK Biobank and organize them as follows (example shown for `Z87`):
+
+- Covariates:
+  - `rep/cov_both.tsv`
+  - `rep/cov_female.tsv`
+  - `rep/cov_male.tsv`
+
+- Trait-specific files:
+  - Genotypes (PLINK prefix): `rep/Z87/Z87.{bed,bim,fam}`
+  - Phenotypes:
+    - `rep/Z87/phen_both.tsv`
+    - `rep/Z87/phen_female.tsv`
+    - `rep/Z87/phen_male.tsv`
+
+Run the replication GWAS (the argument is the 1-based index of the trait in `files/replication_traits.csv`):
+
+```bash
+python replication_first_stage.py 1
+```
+
+This will give you `Primary_Summary_Statistics/Z87/Z87.replication_first_stage.tsv`, which is a tab-delimited table with columns:
+`Beta_both, SE_both, P_both, Beta_female, SE_female, P_female, Beta_male, SE_male, P_male, SNP, traits`.
+
+
+
+
+
+
+
+
+
+
+
 
 
 
