@@ -23,9 +23,9 @@ path = '../files/'
 path_to_trait = '../Primary_Summary_Statistics/'
 
 #Read Covariate Data 
-cov_both = pd.read_csv("../files/phen/cov_both.tsv",sep='\t')
-cov_male = pd.read_csv("../files/phen/cov_male.tsv",sep='\t')
-cov_female = pd.read_csv("../files/phen/cov_female.tsv",sep='\t')
+cov_both = pd.read_csv("../phen/cov_both.tsv",sep='\t')
+cov_male = pd.read_csv("../phen/cov_male.tsv",sep='\t')
+cov_female = pd.read_csv("../phen/cov_female.tsv",sep='\t')
 
 def summary_model(model):
     coef = model.params['genotype']
