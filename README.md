@@ -147,11 +147,16 @@ This will give two different result `/rep/Z87/Z87/replication_SSE_first_class.ts
 ## QQ-plot of summary statistics
 
 ```
-python qqplot.py 1
+python qqplot.py {traitgroup_num}
 ```
-Here `1` is the traitgroup number. 
 
-## Manhattan plot
+## Manhattan plot of summary statistics with sex-specific effects marked
+
+```
+python manhattonplot.py {traitgroup_num}
+```
+
+# EQTL studies
 
 
 
