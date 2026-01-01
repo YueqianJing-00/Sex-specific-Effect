@@ -113,7 +113,7 @@ To perform the replication analysis, construct the replication cohort as describ
   - `rep/cov_male.tsv`
 
 - Trait-specific files:
-  - Genotypes (PLINK prefix): `rep/Z87/Z87.{bed,bim,fam}`
+  - Genotypes (PLINK prefix): `rep/rep.{bed,bim,fam}`
   - Phenotypes:
     - `rep/Z87/phen_both.tsv`
     - `rep/Z87/phen_female.tsv`
@@ -128,7 +128,10 @@ python replication_first_stage.py 1
 This will give you `Primary_Summary_Statistics/Z87/Z87.replication_first_stage.tsv`, which is a tab-delimited table with columns:
 `Beta_both, SE_both, P_both, Beta_female, SE_female, P_female, Beta_male, SE_male, P_male, SNP, traits`.
 
-
+Note that to make the algorithm faster we can only select SNPs that past primary GWAS threshold for the replication study:
+```
+plink --bfile /rep/rep --extract SNP_SSE.txt --make-bed --out /rep/Z87/Z87
+```
 
 
 
