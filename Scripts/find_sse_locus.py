@@ -31,6 +31,10 @@ for i in range(len(traitgroups[traitgroup_num - 1])):
 
     SSE_representative = SSE.loc[SSE.groupby('locus')['p_min'].idxmin()]
     SSE_representative.to_csv('../Primary_Summary_Statistics/{0}/{0}.clumped_SSE_representative.tsv'.format(trait), sep = '\t', index = False)
+
+    SSE_SNP = pd.merge(non_SSE, SSE_representative, left_on=['locus'], right_on=['locus'])['SNP_x'].unique()
+    SSE_SNP = pd.DataFrame(SSE_SNP)
+    SSE_SNP.to_csv('../Primary_Summary_Statistics/{0}/SNP_SSE.txt'.format(trait),sep='\t',index=False,header=None)
     
     #create a ED_candiadate dataframe that get rid of all the locus in SSE
     ED_candidate = non_SSE[~non_SSE['locus'].isin(SSE['locus'])]
