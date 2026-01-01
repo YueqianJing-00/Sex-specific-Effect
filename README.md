@@ -1,4 +1,4 @@
-# Sex-specific Effect
+# GWAS
 
 This repository provides an end-to-end pipeline. Below is a toy example using **UK Biobank phenotype `Z87`** as the input trait. You can replace `Z87` with any other supported trait code.
 
@@ -142,7 +142,16 @@ python replication_select.py 1
 ```
 This will give two different result `/rep/Z87/Z87/replication_SSE_first_class.tsv` and `/rep/Z87/Z87/replication_SSE_second_class.tsv`, with a stricter and a loose threshold, respectively, as described in the ***Methods***.
 
+# Plot the result
 
+## QQ-plot of summary statistics
+
+```
+python qqplot.py 1
+```
+Here `1` is the traitgroup number. 
+
+## Manhattan plot
 
 
 
