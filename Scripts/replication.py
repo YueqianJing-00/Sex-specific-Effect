@@ -19,13 +19,12 @@ traits = sorted(pd.read_csv('../files/traits.txt',header=None).iloc[:,0])
 replication_traits = sorted(pd.read_csv('../files/replication_traits.csv',sep='\t')['traits'].to_list())
 traitgroup_dict = pickle.load(open('../files/traitgroup_dict.pkl', 'rb'))
 traitgroups = pickle.load(open('../files/traitgroups.pkl', 'rb'))
-path = '../files/'
-path_to_trait = '../Primary_Summary_Statistics/'
+path_to_trait = '../rep/'
 
 #Read Covariate Data 
-cov_both = pd.read_csv("../phen/cov_both.tsv",sep='\t')
-cov_male = pd.read_csv("../phen/cov_male.tsv",sep='\t')
-cov_female = pd.read_csv("../phen/cov_female.tsv",sep='\t')
+cov_both = pd.read_csv("../rep/cov_both.tsv",sep='\t')
+cov_male = pd.read_csv("../rep/cov_male.tsv",sep='\t')
+cov_female = pd.read_csv("../rep/cov_female.tsv",sep='\t')
 
 def summary_model(model):
     coef = model.params['genotype']
