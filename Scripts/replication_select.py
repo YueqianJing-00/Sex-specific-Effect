@@ -14,11 +14,10 @@ from pyplink import PyPlink
 from statsmodels.stats.multitest import multipletests
 from tqdm import tqdm
 
-traits = sorted(pd.read_csv('/gpfs/gibbs/pi/zhao/yj348/Old/sse/traits.txt',header=None).iloc[:,0])
-replication_traits = sorted(pd.read_csv('/gpfs/gibbs/pi/zhao/yj348/Old/sse/replication_traits.csv',sep='\t')['traits'].to_list())
-traitgroup_dict = pickle.load(open('/gpfs/gibbs/pi/zhao/yj348/Old/sse/traitgroup_dict.pkl', 'rb'))
-traitgroups = pickle.load(open('/gpfs/gibbs/pi/zhao/yj348/Old/sse/traitgroups.pkl', 'rb'))
-rep_groups= pickle.load(open('/gpfs/gibbs/pi/zhao/yj348/Old/sse/replicate_loci_group.pkl', 'rb'))
+traits = sorted(pd.read_csv('../file/traits.txt',header=None).iloc[:,0])
+replication_traits = sorted(pd.read_csv('../file/replication_traits.csv',sep='\t')['traits'].to_list())
+traitgroup_dict = pickle.load(open('../file/traitgroup_dict.pkl', 'rb'))
+traitgroups = pickle.load(open('../file/traitgroups.pkl', 'rb'))
 path_to_rep = '../rep/'
 path_to_trait = '../Primary_Summary_Statistics/'
 
@@ -61,6 +60,9 @@ def test_SSE_second(df):
     df.to_csv('{0}{1}/{1}.replication_SSE_second_class.tsv'.format(path_to_rep, trait), sep = '\t',index=False)
     
     return df
+
+i = int(sys.argv[1]) - 1
+trait = replication_traits[i]
 
 df = pd.read_csv('{0}{1}/{1}.replication_first_stage.tsv'.format(path_to_trait, trait), sep = '\t')
 df_SSE_first = df[(df['P_male'] < 5e-8) | (df['P_female'] < 5e-8)]
