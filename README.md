@@ -134,7 +134,13 @@ plink --bfile /rep/rep --extract SNP_SSE.txt --make-bed --out /rep/Z87/Z87
 ```
 
 
+## 7) Combine Primary GWAS and replication GWAS
 
+In the last step we will combine primary GWAS and replication GWAS:
+```
+python replication_select.py 1
+```
+This will give two different result `/rep/Z87/Z87/replication_SSE_first_class.tsv` and `/rep/Z87/Z87/replication_SSE_second_class.tsv`, with a stricter and a loose threshold, respectively, as described in the ***Methods***.
 
 
 
