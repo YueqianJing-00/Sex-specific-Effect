@@ -1,3 +1,7 @@
+Addditional files can be found at https://drive.google.com/drive/folders/1Zh-CGWJH4XBhedQYaDccotXl5COZau0Y?usp=drive_link
+
+If you have any questions please reach out to yueqian.jing@yale.edu
+
 # GWAS
 
 This repository provides an end-to-end pipeline. Below is a toy example using **UK Biobank phenotype `Z87`** as the input trait. You can replace `Z87` with any other supported trait code.
@@ -155,8 +159,6 @@ python qqplot.py {traitgroup_num}
 ```
 python manhattonplot.py {traitgroup_num}
 ```
-
-# EQTL studies
 
 
 
