@@ -1,2 +1,170 @@
 # Sex-specific-Effect
-Code and files for Sex-specific-effect
+Addditional files can be found at https://drive.google.com/drive/folders/1Zh-CGWJH4XBhedQYaDccotXl5COZau0Y?usp=drive_link
+
+If you have any questions please reach out to yueqian.jing@yale.edu
+
+# GWAS
+
+This repository provides an end-to-end pipeline. Below is a toy example using **UK Biobank phenotype `Z87`** as the input trait. You can replace `Z87` with any other supported trait code.
+
+## 1) Download primary summary statistics
+
+Download the GWAS summary statistics from the Neale Lab and place them under:
+
+```text
+Primary_Summary_Statistics/
+```
+
+For the toy example (`Z87`), the expected directory structure is:
+
+```text
+Primary_Summary_Statistics/Z87/
+  ├── Z87.gwas.imputed_v3.both_sexes.tsv.bgz
+  ├── Z87.gwas.imputed_v3.female.tsv.bgz
+  └── Z87.gwas.imputed_v3.male.tsv.bgz
+```
+
+## 2) Clean and organize summary statistics
+
+Run:
+
+```bash
+python ./Scripts/clean_sumstat.py Z87
+```
+The file variants.pkl can be find in the google drive.
+
+This gives you the cleaned summary statistics with column SNP, beta, se, tstat, P, A1 (minor allele), A2 (reference allele), etc.
+
+```text
+Primary_Summary_Statistics/Z87/
+  ├── Z87.sumstats.both_sexes.tsv
+  ├── Z87.sumstats.male.tsv
+  └── Z87.sumstats.female.tsv
+```
+## 3) Pairwise genetic correlation and trait grouping
+
+Pairwise genetic correlations among 733 traits are computed using LDSC (filtering trait pairs with |r_g| ≥ 0.5):
+
+```bash
+python ldsc.py \
+  --ref-ld-chr ./ldsc/eur_w_ld_chr/ \
+  --w-ld-chr ./ldsc/eur_w_ld_chr/ \
+  --rg Z87.ldsc.both_sexes.sumstats.gz,../Z85/Z85.ldsc.both_sexes.sumstats.gz \
+  --out ../../Genetic_Correlations/Z87-Z85
+```
+The 733 × 733 genetic correlation matrix is stored in `files/genecorr.pkl`.
+
+Using this matrix, the 733 traits are clustered into 270 trait groups. The resulting group assignments are saved as:
+- `files/traitgroups.pkl` (list of trait groups)
+- `files/traitgroup_dict.pkl` (mapping from trait → group index)
+
+For each trait group, we construct group-level summary statistics by taking, for each variant, the minimum P-value across all traits in that group. The resulting trait-group summary statistics are saved under `traitgroups/`.
+
+### Toy example: group-level P-value by taking the minimum across traits
+
+Assume trait group `1` contains two traits (`T1`, `T2`):
+
+| SNP  | P (T1)  | P (T2)  | 
+|------|---------|---------|
+| rs1  | 1e-6    | 2e-4    | 
+| rs2  | 0.03    | 5e-8    | 
+| rs3  | NA      | 0.10    | 
+
+The resulting group-level summary stats would be:
+
+| SNP  | P_group |
+|------|---------|
+| rs1  | 1e-6    |
+| rs2  | 5e-8    |
+| rs3  | 0.10    |
+
+## 4）Clumping loci within a trait group (PLINK 1.9)
+
+Assuming `Z87` belongs to trait group `1`, we perform LD clumping on the trait-group summary statistics using PLINK 1.9 with 1000G EUR samples as reference panel:
+
+```bash
+plink --bfile 1000G \
+  --clump Trait_Groups/1/1.sumstats.tsv \
+  --clump-kb 500 \
+  --clump-p1 5e-8 \
+  --clump-p2 1 \
+  --clump-r2 0.1 \
+  --out Trait_Groups/1/1
+```
+
+
+## 5) Group SNPs by clumped loci and extract sex-specific loci
+
+This step uses the PLINK clumping results to group SNPs into loci, then outputs locus-annotated tables for each trait in the selected trait group.
+
+
+```bash
+python ./Scripts/primary_classify_snps.py 1
+python ./Scripts/find_sse_locus.py 1
+```
+
+***Outputs (per trait, saved under `Primary_Summary_Statistics/Z87/`)***
+- `Z87.clumped_all.tsv`: all SNPs grouped by locus
+- `Z87.clumped_SSE.tsv`: sex-specific SNPs (genome-wide significant in one sex only); includes `p_diff_adj` (BH-FDR) when available
+- `Z87.clumped_SSE_representative.tsv`: reported sex-specific loci
+
+## 6) Replication GWAS
+
+To perform the replication analysis, construct the replication cohort as described in the **Methods**. Extract genotypes, phenotypes, and covariates from UK Biobank and organize them as follows (example shown for `Z87`):
+
+- Covariates:
+  - `rep/cov_both.tsv`
+  - `rep/cov_female.tsv`
+  - `rep/cov_male.tsv`
+
+- Trait-specific files:
+  - Genotypes (PLINK prefix): `rep/rep.{bed,bim,fam}`
+  - Phenotypes:
+    - `rep/Z87/phen_both.tsv`
+    - `rep/Z87/phen_female.tsv`
+    - `rep/Z87/phen_male.tsv`
+
+Run the replication GWAS (the argument is the 1-based index of the trait in `files/replication_traits.csv`):
+
+```bash
+python replication_first_stage.py 1
+```
+
+This will give you `Primary_Summary_Statistics/Z87/Z87.replication_first_stage.tsv`, which is a tab-delimited table with columns:
+`Beta_both, SE_both, P_both, Beta_female, SE_female, P_female, Beta_male, SE_male, P_male, SNP, traits`.
+
+Note that to make the algorithm faster we can only select SNPs that past primary GWAS threshold for the replication study:
+```
+plink --bfile /rep/rep --extract SNP_SSE.txt --make-bed --out /rep/Z87/Z87
+```
+
+
+## 7) Combine Primary GWAS and replication GWAS
+
+In the last step we will combine primary GWAS and replication GWAS:
+```
+python replication_select.py 1
+```
+This will give two different result `/rep/Z87/Z87/replication_SSE_first_class.tsv` and `/rep/Z87/Z87/replication_SSE_second_class.tsv`, with a stricter and a loose threshold, respectively, as described in the ***Methods***.
+
+# Plot the result
+
+## QQ-plot of summary statistics
+
+```
+python qqplot.py {traitgroup_num}
+```
+
+## Manhattan plot of summary statistics with sex-specific effects marked
+
+```
+python manhattonplot.py {traitgroup_num}
+```
+
+
+
+
+
+
+
+
